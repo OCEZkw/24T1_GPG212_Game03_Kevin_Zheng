@@ -5,75 +5,30 @@ using UnityEngine.UI;
 
 public class OrderManager : MonoBehaviour
 {
-    // Define a structure for orders
-    public struct Order
+    public GameObject orderPrefab;
+    public Transform ordersCanvas;
+
+    void Start()
     {
-        public string topping; // The topping to be added to the order
-        public float timeLimit; // Time limit for completing the order
+        StartCoroutine(SpawnOrderRoutine());
     }
 
-    public List<Order> orderQueue = new List<Order>(); // Queue of orders
-    public float orderSpawnInterval = 5f; // Time interval between new orders
-    private float timeSinceLastOrder; // Time since the last order was spawned
-
-    public Image orderImage;
-    public Sprite[] orderSprites;
-
-    void Update()
+    IEnumerator SpawnOrderRoutine()
     {
-        // Update the time since the last order
-        timeSinceLastOrder += Time.deltaTime;
-
-        // Check if it's time to spawn a new order
-        if (timeSinceLastOrder >= orderSpawnInterval)
+        while (true)
         {
-            // Spawn a new order
+            yield return new WaitForSeconds(Random.Range(5f, 10f));
             SpawnOrder();
-
-            // Reset the timer
-            timeSinceLastOrder = 0f;
         }
-
-
     }
 
     void SpawnOrder()
     {
-        // Create a new order and add it to the queue
-        Order newOrder = new Order
-        {
-            topping = GetRandomTopping(),
-            timeLimit = 10f // Set the time limit for the order (adjust as needed)
-        };
-        orderQueue.Add(newOrder);
+        GameObject newOrder = Instantiate(orderPrefab, /* Random position in 3D space */);
+        // Customize order details (dish, timer, etc.) as needed
 
-        orderImage.sprite = GetOrderSprite(newOrder.topping);
-
-        // Optionally, you can display the new order on the screen or provide feedback
-        Debug.Log("New Order: " + newOrder.topping + ". Time Limit: " + newOrder.timeLimit + "s");
-
-    }
-
-    Sprite GetOrderSprite(string topping)
-    {
-        // Find and return the corresponding sprite for the given topping
-        foreach (var sprite in orderSprites)
-        {
-            if (sprite.name == topping)
-            {
-                return sprite;
-            }
-        }
-        return null; // Handle the case when no matching sprite is found
-    }
-
-
-    string GetRandomTopping()
-    {
-        // Add your list of toppings here
-        string[] toppings = { "Cheese", "Tomato", "Mushroom", "Pepperoni" };
-
-        // Return a random topping
-        return toppings[Random.Range(0, toppings.Length)];
+        // Update UI canvas based on the 3D order position
+        Vector2 screenPos = Camera.main.WorldToScreenPoint(newOrder.transform.position);
+        newOrder.GetComponent<Order>().SetCanvasPosition(screenPos);
     }
 }
