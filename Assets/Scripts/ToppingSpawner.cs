@@ -4,18 +4,19 @@ using UnityEngine;
 
 public class ToppingSpawner : MonoBehaviour
 {
-    public GameObject toppingPrefab1; // Reference to the first bubble prefab
-    public GameObject toppingPrefab2; // Reference to the second bubble prefab
-    public float spawnInterval = 2f; // Time interval between bubble spawns
+    public GameObject toppingPrefab1; // Reference to the first topping prefab
+    public GameObject toppingPrefab2; // Reference to the second topping prefab
+    public GameObject cockroachPrefab; // Reference to the cockroach prefab
+    public float spawnInterval = 2f; // Time interval between spawns
     public Vector3 spawnAreaSize = new Vector3(5f, 2f, 5f); // Size of the random spawn area in 3D
 
     void Start()
     {
-        // Start spawning bubbles at regular intervals
-        InvokeRepeating("SpawnTopping", 0f, spawnInterval);
+        // Start spawning at regular intervals
+        InvokeRepeating("SpawnObject", 0f, spawnInterval);
     }
 
-    void SpawnTopping()
+    void SpawnObject()
     {
         // Calculate a random spawn position within the specified area
         Vector3 randomSpawnPosition = new Vector3(
@@ -24,11 +25,17 @@ public class ToppingSpawner : MonoBehaviour
             transform.position.z + Random.Range(-spawnAreaSize.z / 2f, spawnAreaSize.z / 2f)
         );
 
-        // Randomly choose between two bubble prefabs
-        GameObject selectedBubblePrefab = Random.Range(0f, 1f) < 0.5f ? toppingPrefab1 : toppingPrefab2;
+        // Randomly choose between topping or cockroach prefab
+        GameObject selectedPrefab = Random.Range(0f, 1f) < 0.5f ? GetRandomToppingPrefab() : cockroachPrefab;
 
-        // Instantiate a new bubble at the random spawn position
-        Instantiate(selectedBubblePrefab, randomSpawnPosition, Quaternion.identity);
+        // Instantiate at the random spawn position
+        Instantiate(selectedPrefab, randomSpawnPosition, Quaternion.identity);
+    }
+
+    GameObject GetRandomToppingPrefab()
+    {
+        // Randomly choose between two topping prefabs
+        return Random.Range(0f, 1f) < 0.5f ? toppingPrefab1 : toppingPrefab2;
     }
 
     // Draw Gizmos to visualize the spawn area

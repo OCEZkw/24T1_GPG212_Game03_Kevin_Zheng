@@ -19,7 +19,7 @@ public class PlayerController : MonoBehaviour
 
         // Optionally, you can limit the player's movement within a specific range
         // For example, if you want to keep the player within x = -5 to 5 range:
-        float newX = Mathf.Clamp(transform.position.x, -5f, 5f);
+        float newX = Mathf.Clamp(transform.position.x, -7f, 7f);
         transform.position = new Vector3(newX, transform.position.y, transform.position.z);
     }
 }
