@@ -7,7 +7,7 @@ public class ToppingSpawner : MonoBehaviour
     public GameObject toppingPrefab1; // Reference to the first topping prefab
     public GameObject toppingPrefab2; // Reference to the second topping prefab
     public GameObject cockroachPrefab; // Reference to the cockroach prefab
-    public float spawnInterval = 2f; // Time interval between spawns
+    public float spawnInterval = 0.2f; // Time interval between spawns
     public Vector3 spawnAreaSize = new Vector3(5f, 2f, 5f); // Size of the random spawn area in 3D
 
     void Start()
@@ -26,7 +26,20 @@ public class ToppingSpawner : MonoBehaviour
         );
 
         // Randomly choose between topping or cockroach prefab
-        GameObject selectedPrefab = Random.Range(0f, 1f) < 0.5f ? GetRandomToppingPrefab() : cockroachPrefab;
+        float randomNumber = Random.Range(0f, 1f);
+        GameObject selectedPrefab;
+        if (randomNumber < 0.1f)
+        {
+            selectedPrefab = cockroachPrefab;
+        }
+        else if (randomNumber < 0.5f)
+        {
+            selectedPrefab = toppingPrefab1;
+        }
+        else
+        {
+            selectedPrefab = toppingPrefab2;
+        }
 
         // Instantiate at the random spawn position
         Instantiate(selectedPrefab, randomSpawnPosition, Quaternion.identity);
@@ -34,8 +47,20 @@ public class ToppingSpawner : MonoBehaviour
 
     GameObject GetRandomToppingPrefab()
     {
-        // Randomly choose between two topping prefabs
-        return Random.Range(0f, 1f) < 0.5f ? toppingPrefab1 : toppingPrefab2;
+        // Randomly choose between two topping prefabs or the cockroach prefab
+        float randomNumber = Random.Range(0f, 1f);
+        if (randomNumber < 0.1f)
+        {
+            return cockroachPrefab;
+        }
+        else if (randomNumber < 0.9f)
+        {
+            return toppingPrefab2;
+        }
+        else
+        {
+            return toppingPrefab1;
+        }
     }
 
     // Draw Gizmos to visualize the spawn area

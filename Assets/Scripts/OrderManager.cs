@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 
 public class OrderManager : MonoBehaviour
@@ -11,10 +12,19 @@ public class OrderManager : MonoBehaviour
     public Button deliveryButton; // Button to deliver the order
     public TMP_Text scoreText; // TextMeshPro text to display the score
     public ToppingManager toppingManager; // Reference to the ToppingManager script
+    public TextMeshProUGUI popupTextPrefab;
+    public Transform popupTextParent;
 
     private int currentOrderIndex; // Index of the current order being displayed
     private int score; // Player's score
     private float orderTimer; // Timer for the order duration
+
+
+    public int Score
+    {
+        get { return score; }
+        set { score = value; }
+    }
 
     private void Start()
     {
@@ -50,16 +60,26 @@ public class OrderManager : MonoBehaviour
         int pearls = toppingManager.PearlCount;
         int jelly = toppingManager.JellyCount;
 
+        int scoreChange = 0;
+        string popupText = "";
+
         if ((currentOrderIndex == 0 && pearls == 3) ||
             (currentOrderIndex == 1 && pearls == 2 && jelly == 1) ||
             (currentOrderIndex == 2 && jelly == 3))
         {
-            score += 10;
+            scoreChange = 10;
+            popupText = "+10";
         }
         else
         {
-            score -= 5;
+            scoreChange = -5;
+            popupText = "-5";
         }
+
+        score += scoreChange;
+
+        // Show popup text
+        ShowPopupText(popupText);
 
         // Reset topping count regardless of the order outcome
         toppingManager.ResetCounts();
@@ -69,8 +89,26 @@ public class OrderManager : MonoBehaviour
     }
 
     // Function to update score text
-    private void UpdateScoreText()
+    public void UpdateScoreText()
     {
         scoreText.text = "Score: " + score.ToString();
+    }
+
+    // Function to show pop-up text
+    private void ShowPopupText(string text)
+    {
+        TextMeshProUGUI popupText = Instantiate(popupTextPrefab, popupTextParent);
+        popupText.text = text;
+
+        Destroy(popupText.gameObject, 1f); // Destroy the pop-up text after 1 second
+    }
+
+    public void GameEnd()
+    {
+        // Set the final score in the GameManager
+        GameManager.Instance.FinalScore = score;
+
+        // Load the "GameEnd" scene
+        SceneManager.LoadScene("GameEnd");
     }
 }

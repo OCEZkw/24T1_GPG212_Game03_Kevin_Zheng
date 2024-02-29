@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Timer : MonoBehaviour
 {
@@ -15,6 +16,8 @@ public class Timer : MonoBehaviour
     private Vector3 targetScale;
     private float currentTime; // Current time left
     private bool isAnimating = true; // Flag to indicate if animation is in progress
+
+    public OrderManager orderManager;
 
     void Start()
     {
@@ -36,6 +39,9 @@ public class Timer : MonoBehaviour
                     currentTime = 0;
                     // Game Over logic can be placed here
                     Debug.Log("Game Over!"); // Placeholder for Game Over logic
+
+                    // Call the GameEnd method in the OrderManager script
+                    orderManager.GameEnd();
                 }
 
                 // Update the UI text
