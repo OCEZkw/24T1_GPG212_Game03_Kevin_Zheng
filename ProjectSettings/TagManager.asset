@@ -8,6 +8,7 @@ TagManager:
   - Jelly
   - Cup
   - Virus
+  - BulletDestroyer
   layers:
   - Default
   - TransparentFX
