@@ -111,4 +111,8 @@ public class OrderManager : MonoBehaviour
         // Load the "GameEnd" scene
         SceneManager.LoadScene("GameEnd");
     }
+    public void ResetToppingCount()
+    {
+        toppingManager.ResetCounts();
+    }
 }
